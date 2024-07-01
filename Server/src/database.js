@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const URI = process.env.URI
     ? process.env.URI
-    : 'mongodb://localhost:27017/SistemaBiblioteca';
+    : 'mongodb://localhost:27017/Test';
 
 mongoose.connect(URI);
 
