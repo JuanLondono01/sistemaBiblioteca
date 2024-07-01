@@ -30,6 +30,7 @@ const userSchema = mongoose.Schema({
         {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Book',
+            required: false
         },
     ],
     createdAt: {
