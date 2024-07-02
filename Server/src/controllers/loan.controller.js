@@ -1,5 +1,4 @@
 const Loan = require('../models/loan');
-const User = require('../models/users');
 const Book = require('../models/books');
 const loanCtrl = {};
 
@@ -15,7 +14,9 @@ loanCtrl.loanBook = async (req, res) => {
             if (!book || !book.availability) {
                 return res
                     .status(400)
-                    .json({ message: 'El libro no está disponible' });
+                    .json({
+                        message: `El libro con ID ${bookId} no está disponible`,
+                    });
             }
 
             const loan = new Loan({
@@ -28,12 +29,15 @@ loanCtrl.loanBook = async (req, res) => {
             book.availability = false;
             await book.save();
 
-            loans.push(book);
+            loans.push(loan);
         }
 
-        res.status(201).json({ message: 'Libro prestado exitosamente', loan });
+        res.status(201).json({
+            message: 'Libros prestados exitosamente',
+            loans,
+        });
     } catch (error) {
-        res.status(500).json({ message: 'Error al prestar el libro', error });
+        res.status(500).json({ message: 'Error al prestar los libros', error });
     }
 };
 
@@ -49,11 +53,16 @@ loanCtrl.returnBook = async (req, res) => {
         }
 
         loan.returnDate = new Date();
-        await loan.save;
+        await loan.save();
 
-        const book = Book.findById(loan.book._id);
+        const book = await Book.findById(loan.book._id);
         book.availability = true;
         await book.save();
+
+        if (loan.returnDate) {
+            await Loan.findByIdAndDelete(loanId);
+        }
+
         res.status(200).json({ message: 'Libro devuelto exitosamente', loan });
     } catch (error) {
         res.status(500).json({ message: 'Error al devolver el libro', error });
