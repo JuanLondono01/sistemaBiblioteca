@@ -26,6 +26,10 @@ const bookSchema = mongoose.Schema({
         type: String,
         required: true,
     },
+    availability: {
+        type: Boolean,
+        required: true,
+    },
 });
 
 const Book = mongoose.model('Book', bookSchema);
