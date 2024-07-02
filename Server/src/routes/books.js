@@ -1,12 +1,21 @@
-const {Router} = require('express')
-const router = Router()
-
+const {
+    getBooks,
+    addBook,
+    getBookInfo,
+    updateBookById,
+    deleteBookById,
+} = require('../controllers/book.controller');
+const { Router } = require('express');
+const router = Router();
 
 router.route('/')
-    .get() //TODO obtener la lista de libros
-    .post() //TODO crear/agregar un nuevo libro
+    .get(getBooks)
+    .post(addBook);
 
 router.route('/:id')
-    .get() //TODO obtener los datos de un libro
-    .put() //TODO actulizar los datos de un libro
-    .delete() //TODO eliminar un libro
+    .get(getBookInfo)
+    .put(updateBookById)
+    .delete(deleteBookById);
+
+
+module.exports = router;
