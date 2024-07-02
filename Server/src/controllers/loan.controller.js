@@ -1,32 +1,35 @@
 const Loan = require('../models/loan');
-const User = require('../models/users')
+const User = require('../models/users');
 const Book = require('../models/books');
 const loanCtrl = {};
 
 loanCtrl.loanBook = async (req, res) => {
     try {
-        const { userId, bookId } = req.body;
-        const user = User.findById(userId)
-        const book = await Book.findById(bookId);
+        const { userId, bookIds } = req.body;
 
-        if (!book || !book.availability) {
-            return res
-                .status(400)
-                .json({ message: 'El libro no está disponible' });
+        const loans = [];
+
+        for (const bookId of bookIds) {
+            const book = await Book.findById(bookId);
+
+            if (!book || !book.availability) {
+                return res
+                    .status(400)
+                    .json({ message: 'El libro no está disponible' });
+            }
+
+            const loan = new Loan({
+                user: userId,
+                book: bookId,
+            });
+
+            await loan.save();
+
+            book.availability = false;
+            await book.save();
+
+            loans.push(book);
         }
-
-        const loan = new Loan({
-            user: userId,
-            book: bookId,
-        });
-
-        await loan.save();
-
-        book.availability = false;
-        await book.save();
-
-        user.booksLoaned.push(book)
-        await user.save()
 
         res.status(201).json({ message: 'Libro prestado exitosamente', loan });
     } catch (error) {
@@ -40,12 +43,9 @@ loanCtrl.returnBook = async (req, res) => {
 
         const loan = await Loan.findById(loanId).populate('book');
         if (!loan || loan.returnDate) {
-            return res
-                .status(400)
-                .json({
-                    message:
-                        'El préstamo no es válido o el libro ya fue devuelto',
-                });
+            return res.status(400).json({
+                message: 'El préstamo no es válido o el libro ya fue devuelto',
+            });
         }
 
         loan.returnDate = new Date();
@@ -72,6 +72,4 @@ loanCtrl.getAllLoans = async (req, res) => {
     }
 };
 
-
-
-module.exports = loanCtrl
+module.exports = loanCtrl;
