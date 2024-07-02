@@ -13,7 +13,7 @@ const bookSchema = mongoose.Schema({
         type: String,
         required: true,
     },
-    publishedDated: {
+    publishedDate: {
         type: Date,
         required: true,
     },
@@ -33,5 +33,6 @@ const bookSchema = mongoose.Schema({
 });
 
 const Book = mongoose.model('Book', bookSchema);
+
 
 module.exports = Book;
