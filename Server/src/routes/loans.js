@@ -1,11 +1,22 @@
 const { Router } = require('express');
-const { getAllLoans, loanBook, returnBook } = require('../controllers/loan.controller');
+const {
+    getAllLoans,
+    loanBook,
+    returnBook,
+} = require('../controllers/loan.controller');
+const authmiddleware = require('../middleware/authmiddleware');
+
 const router = Router();
+router
+    .route('/')
+    .get(authmiddleware, getAllLoans);
 
-router.route('/').get(getAllLoans);
+router
+    .route('/')
+    .post(authmiddleware, loanBook);
 
-router.route('/').post(loanBook);
+router
+    .route('/return/:loanId')
+    .post(authmiddleware, returnBook);
 
-router.route('/return/:loanId').post(returnBook);
-
-module.exports = router
+module.exports = router;
