@@ -26,6 +26,10 @@ const bookSchema = mongoose.Schema({
         type: String,
         required: true,
     },
+    bookCover: {
+        type: String,
+        required: true
+    },
     availability: {
         type: Boolean,
         required: true,
