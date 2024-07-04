@@ -1,18 +1,19 @@
 const { Router } = require('express');
 const {getUsers, createUser, getUserById, deleteUserByBId, updateUserById} = require('../controllers/user.controller')
+const authmiddleware = require('../middleware/authmiddleware')
 
 const router = Router();
 
 
 
 router.route('/')
-    .get(getUsers) 
-    .post(createUser) 
+    .get(authmiddleware, getUsers) 
+    .post(authmiddleware, createUser) 
 
 
 router.route('/:id')
-    .get(getUserById) 
-    .delete(deleteUserByBId) 
-    .put(updateUserById) 
+    .get(authmiddleware, getUserById) 
+    .delete(authmiddleware, deleteUserByBId) 
+    .put(authmiddleware, updateUserById) 
 
 module.exports = router

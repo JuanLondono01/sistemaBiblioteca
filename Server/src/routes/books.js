@@ -6,17 +6,19 @@ const {
     deleteBookById,
 } = require('../controllers/book.controller');
 const { Router } = require('express');
+const authmiddleware = require('../middleware/authmiddleware');
+
 const router = Router();
 
-router.route('/')
-    .get(getBooks)
-    .post(addBook);
+router
+    .route('/')
+    .get(authmiddleware, getBooks)
+    .post(authmiddleware, addBook);
 
-router.route('/:id')
-    .get(getBookInfo)
-    .put(updateBookById)
-    .delete(deleteBookById);
+router
+    .route('/:id')
+    .get(authmiddleware, getBookInfo)
+    .put(authmiddleware, updateBookById)
+    .delete(authmiddleware, deleteBookById);
 
-
-    
 module.exports = router;
