@@ -13,6 +13,8 @@ userCtrl.getUsers = async (req, res) => {
             message: 'Users found',
             usersData: users,
         });
+
+        res.status(200).send(users)
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
@@ -43,6 +45,7 @@ userCtrl.getUserById = async (req, res) => {
             message: 'User found',
             user: userData,
         });
+        res.status(200).send(userData)
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
