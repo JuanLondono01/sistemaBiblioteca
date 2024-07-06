@@ -1,3 +1,17 @@
+<<<<<<< HEAD
+const {Router} = require('express')
+const router = Router()
+
+
+router.route('/')
+    .get() //TODO obtener la lista de libros
+    .post() //TODO crear/agregar un nuevo libro
+
+router.route('/:id')
+    .get() //TODO obtener los datos de un libro
+    .put() //TODO actulizar los datos de un libro
+    .delete() //TODO eliminar un libro
+=======
 const {
     getBooks,
     addBook,
@@ -22,3 +36,4 @@ router
     .delete(authmiddleware, deleteBookById);
 
 module.exports = router;
+>>>>>>> 717c77c111a784f461ae86012d6eb7f643d40e27

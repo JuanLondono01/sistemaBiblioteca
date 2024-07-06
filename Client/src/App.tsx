@@ -1,6 +1,6 @@
 import {Route, BrowserRouter, Routes} from 'react-router-dom'
-import { Books } from './pages/Books';
-import { Login } from './pages/Login';
+import { Books } from './Books/Books';
+import { Login } from './Login/Login';
 
 
 export const App = () => {
@@ -8,7 +8,7 @@ export const App = () => {
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<Books/>}/>
-          <Route path='/' element={<Login/>}/>
+          <Route path='/login' element={<Login/>}/>
 
         </Routes>
       </BrowserRouter>

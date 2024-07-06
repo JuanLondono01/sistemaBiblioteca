@@ -26,6 +26,16 @@ const userSchema = mongoose.Schema({
         type: String,
         required: true,
     },
+<<<<<<< HEAD
+    booksLoaned: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Book',
+            required: false
+        },
+    ],
+=======
+>>>>>>> 717c77c111a784f461ae86012d6eb7f643d40e27
     createdAt: {
         type: Date,
         default: Date.now,
