@@ -66,8 +66,43 @@ export const Books = () => {
                         />
                         <SearchBar search='Books' />
                     </section>
+                    
+                    <section className='search-sect'>
+                        <IoIosAddCircleOutline
+                            size={30}
+                            color='gray'
+                            className='add-book'
+                        />
+                        <SearchBar search='Books' />
+                    </section>
                 </section>
             </div>
+            <section className='card-list'>
+                <BookCard />
+                <BookCard />
+                <BookCard />
+                <BookCard />
+                <BookCard />
+                <BookCard />
+                <BookCard />
+                <BookCard />
+                <BookCard />
+                <BookCard />
+                <BookCard />
+                <BookCard />
+                <BookCard />
+                <BookCard />
+                <BookCard />
+                <BookCard />
+                <BookCard />
+                <BookCard />
+                <BookCard />
+                <BookCard />
+                <BookCard />
+                <BookCard />
+                <BookCard />
+                <BookCard />
+            </section>
             <section className='card-list'>
                 <BookCard />
                 <BookCard />

@@ -1,3 +1,9 @@
+
+import '../styles/search.css';
+
+interface searchProps {
+    search: string;
+}
 import { useState } from 'react';
 import '../styles/search.css';
 import { IoIosSearch } from 'react-icons/io';
