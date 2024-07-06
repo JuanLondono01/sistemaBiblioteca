@@ -5,14 +5,13 @@ import '../styles/genres.css';
 interface GenreProps {
     text: string;
     isActive: boolean;
-    genre: string;
+
     onClick: () => void;
 }
 
 export const Genres: React.FC<GenreProps> = ({
     text,
     isActive = false,
-    genre,
     onClick,
 }) => {
     return (
@@ -20,8 +19,8 @@ export const Genres: React.FC<GenreProps> = ({
             className={`check-container ${isActive ? 'active-filter' : ''}`}
             onClick={onClick}
         >
-            <input type='checkbox' id={genre} checked={isActive} />
-            <label htmlFor={genre}>
+            <input type='checkbox'  />
+            <label >
                 {isActive ? <FaCheck className='checked' /> : null}
                 {text}
             </label>
