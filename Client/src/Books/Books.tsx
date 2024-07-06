@@ -5,7 +5,7 @@ import { SearchBar } from '../Global/Components/SearchBar';
 
 import { IoIosAddCircleOutline } from 'react-icons/io';
 import './styles/books.css';
-import { BookCard } from './components/BookCard';
+import { BookCard } from './components/BookCard'
 
 export const Books = () => {
     const [activeGenres, setActiveGenres] = useState<string[]>([]);
