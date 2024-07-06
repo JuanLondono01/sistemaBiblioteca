@@ -1,11 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 * {
     padding: 0%;
     margin: 0%;
     box-sizing: border-box;
-    font-family: "Roboto", sans-serif;
-
+    font-family: 'Roboto', sans-serif;
 }
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+body::-webkit-scrollbar{
+    display: none;
+}
 
 h1 {
     letter-spacing: 25px;
@@ -14,22 +17,39 @@ h1 {
     font-size: 1.5rem;
 }
 
-
-h2{
+h2 {
     margin-top: 2.5rem;
     margin-left: 6rem;
-    font-weight: lighter;
-
+    font-weight: 400;
 }
 
-.filters{
+.filters {
     display: flex;
     gap: 4px;
     margin-top: 3rem;
     margin-left: 6.2rem;
 }
 
-.action-bar{
-    border: 1px solid black;
+.action-bar {
     height: fit-content;
+    padding-bottom: 15px;
+}
+
+.search-sect {
+    position: absolute;
+    right: 1.7rem;
+    top: 10.1rem;
+}
+
+.add-book {
+    position: relative;
+    top: 5px;
+    right: inherit;
+    cursor: pointer;
+}
+
+.card-list {
+    display: grid;
+    grid-template-columns: repeat(8,1fr);
+    margin-left: 6rem;
 }
