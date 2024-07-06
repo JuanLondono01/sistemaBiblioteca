@@ -2,7 +2,10 @@ import { useState } from 'react';
 import { Genres } from '../Books/components/Genres';
 import { SideBar } from '../Global/Components/SideBar';
 import { SearchBar } from '../Global/Components/SearchBar';
+
+import { IoIosAddCircleOutline } from 'react-icons/io';
 import './styles/books.css';
+import { BookCard } from './components/BookCard';
 
 export const Books = () => {
     const [activeGenres, setActiveGenres] = useState<string[]>([]);
@@ -34,36 +37,63 @@ export const Books = () => {
                         text='Terror'
                         isActive={isGenreActive('Terror')}
                         onClick={() => handleGenreClick('Terror')}
-                        genre={'Terror'}
                     />
                     <Genres
                         text='Suspenso'
                         isActive={isGenreActive('Suspenso')}
                         onClick={() => handleGenreClick('Suspenso')}
-                        genre='Suspenso'
                     />
                     <Genres
                         text='Accion'
                         isActive={isGenreActive('Accion')}
                         onClick={() => handleGenreClick('Accion')}
-                        genre='Accion'
                     />
                     <Genres
                         text='Historia'
                         isActive={isGenreActive('Historia')}
                         onClick={() => handleGenreClick('Historia')}
-                        genre='Historia'
                     />
                     <Genres
                         text='Drama'
                         isActive={isGenreActive('Drama')}
                         onClick={() => handleGenreClick('Drama')}
-                        genre='Drama'
                     />
+                    <section className='search-sect'>
+                        <IoIosAddCircleOutline
+                            size={30}
+                            color='gray'
+                            className='add-book'
+                        />
+                        <SearchBar search='Books' />
+                    </section>
                 </section>
-
-                <SearchBar />
             </div>
+            <section className='card-list'>
+                <BookCard />
+                <BookCard />
+                <BookCard />
+                <BookCard />
+                <BookCard />
+                <BookCard />
+                <BookCard />
+                <BookCard />
+                <BookCard />
+                <BookCard />
+                <BookCard />
+                <BookCard />
+                <BookCard />
+                <BookCard />
+                <BookCard />
+                <BookCard />
+                <BookCard />
+                <BookCard />
+                <BookCard />
+                <BookCard />
+                <BookCard />
+                <BookCard />
+                <BookCard />
+                <BookCard />
+            </section>
         </>
     );
 };
