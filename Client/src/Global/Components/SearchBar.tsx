@@ -1,18 +1,13 @@
-
-import '../styles/search.css';
-
-interface searchProps {
-    search: string;
-}
 import { useState } from 'react';
 import '../styles/search.css';
 import { IoIosSearch } from 'react-icons/io';
 import { IoIosClose } from 'react-icons/io';
 interface searchProps {
     search: string;
+    list?: string
 }
 
-export const SearchBar: React.FC<searchProps> = ({ search }) => {
+export const SearchBar: React.FC<searchProps> = ({ search, list }) => {
     const [InSearch, setInSearch] = useState(false);
     const [Search, setSearch] = useState('');
 
@@ -36,6 +31,7 @@ export const SearchBar: React.FC<searchProps> = ({ search }) => {
                     onChange={onInputChange}
                     value={Search}
                     className='search-bar'
+                    list={list}
                 />
                 {InSearch ? (
                     <IoIosClose
