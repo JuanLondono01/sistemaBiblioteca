@@ -42,26 +42,26 @@ export const SideBar: React.FC<activeButtons> = ({
                     <Button
                         text='Books'
                         image={<LuBook size={25} />}
-                        to='/'
+                        to='/Books'
                         isActive={activeBooks}
                     />
                     <Button
                         text='Users'
                         image={<LuUser size={25} />}
-                        to='/'
+                        to='/Users'
                         isActive={activeUsers}
                     />
 
                     <Button
                         text='Loans'
                         image={<CiBookmark size={25} />}
-                        to='/'
+                        to='/Loans'
                         isActive={activeLoans}
                     />
                     <Button
                         text='Settings'
                         image={<GoGear size={25} />}
-                        to='/'
+                        to='/Loans'
                         isActive={activeSettings}
                     />
                 </div>
