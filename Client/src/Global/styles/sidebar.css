@@ -1,0 +1,58 @@
+*{
+    padding: 0%;
+    margin: 0%;
+    box-sizing: border-box;
+}
+
+:root{
+    --primary: #5EE2EB;
+}
+
+.btn-display{
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 12px;
+    text-decoration: none;
+    color: black;
+    width: 80px;
+    height: 56px;
+}
+
+.sideBar{
+    display: flex;
+    flex-direction: column;
+    text-align: center;    
+    width: 80px;
+    height: 100vh;
+    background-color: snow;
+    float: left;
+    position: sticky;
+    left: 0;
+    top: 21px;
+}
+
+.content{
+    margin-top: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center ;
+}
+
+.text{
+    font-size: 12px;
+}
+.icon{
+    position: relative;
+    padding-top: 5px;
+}
+
+.active{
+    background: var(--primary);
+
+    width: 60px;
+    margin-left: 10px;
+    border-radius: 20px;
+    color: white;
+    
+}
