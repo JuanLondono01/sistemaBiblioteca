@@ -1,30 +1,47 @@
-// authHelper.ts
+import axios, { AxiosResponse } from 'axios';
+import { login } from '../../Global/helpers/axios';
+
 export interface FormData {
     user: string;
     password: string;
 }
 
-export const loginAdmin = async (formData: FormData): Promise<{ success: boolean; token?: string; error?: string }> => {
-    try {
-        const response = await fetch('http://localhost:2710/access/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData),
-        });
+interface LoginResponse {
+    token: string;
+}
 
-        if (response.ok) {
-            const data = await response.json();
-            return { success: true, token: data.token };
+interface ErrorResponse {
+    success: false;
+    error: string;
+}
+
+export const loginAdmin = async (formData: FormData): Promise<{ success: true, token: string } | ErrorResponse> => {
+    try {
+        const response: AxiosResponse<LoginResponse> = await login.post('/', formData);
+
+        if (response.status === 200) {
+            console.log('Login successful');
+            const { token } = response.data;
+            return { success: true, token };
         } else if (response.status === 404) {
-            return { success: false, error: 'Email not found' };
+            console.log('User not found');
+            return { success: false, error: 'User not found' };
         } else if (response.status === 401) {
+            console.log('Unauthorized');
             return { success: false, error: 'Unauthorized' };
         } else {
-            return { success: false, error: 'Unexpected error occurred' };
+            console.log('Unexpected status code:', response.status);
+            return { success: false, error: 'Unexpected error' };
         }
     } catch (error) {
-        return { success: false, error: 'Network error' };
+        if (axios.isAxiosError(error) && error.response) {
+            // Handle Axios-specific errors with response
+            console.error('Axios error:', error.response.data);
+            return { success: false, error: 'Network error: ' + error.response.data };
+        } else {
+            // Handle other errors
+            console.error('Network error:', error);
+            return { success: false, error: 'Network error' };
+        }
     }
 };
