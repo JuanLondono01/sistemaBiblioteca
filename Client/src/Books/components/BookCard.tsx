@@ -1,6 +1,12 @@
+import React from 'react';
 import '../styles/card.css'
 
-export const BookCard = () => {
+interface Book {
+    title: string;
+    author: string;
+}
+
+export const BookCard: React.FC<Book> = ({title, author}) => {
     return (
         <>
             <div className="card-container">
@@ -8,8 +14,8 @@ export const BookCard = () => {
                 <img src="" alt="Book cover" />
                 </section>
                 <section className='book-info'>
-                    <h3>Title</h3>
-                    <p>Author</p>
+                    <h3>{title}</h3>
+                    <p>{author}</p>
                 </section>
             </div>
         </>

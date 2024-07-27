@@ -17,7 +17,14 @@ export const Login = () => {
         const result = await loginAdmin(formData);
         
         if (result.success) {
+
+            // Almacena el token en localStorage
+            localStorage.setItem('token', result.token!);
+
+            setShowErrorAlert(false);
+            setError('');
             navigate('/books');
+            console.log('Login successful');
         } else {
             // Muestra el mensaje de error
             setError(result.error);

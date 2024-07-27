@@ -1,4 +1,3 @@
-
 import axios, { AxiosResponse } from 'axios';
 import { login } from '../../Global/helpers/axios';
 
@@ -23,6 +22,7 @@ export const loginAdmin = async (formData: FormData): Promise<{ success: true, t
         if (response.status === 200) {
             console.log('Login successful');
             const { token } = response.data;
+            localStorage.setItem('token', token)
             return { success: true, token };
         } else if (response.status === 404) {
             console.log('User not found');

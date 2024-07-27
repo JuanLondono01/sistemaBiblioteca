@@ -1,14 +1,36 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Genres } from '../Books/components/Genres';
 import { SideBar } from '../Global/Components/SideBar';
 import { SearchBar } from '../Global/Components/SearchBar';
-
 import { IoIosAddCircleOutline } from 'react-icons/io';
 import './styles/books.css';
+import { BooksAPI } from './helpers/BooksAPI';
 import { BookCard } from './components/BookCard';
 
 export const Books = () => {
+    interface BookData {
+        title: string;
+        author: string;
+        _id: string;
+    }
     const [activeGenres, setActiveGenres] = useState<string[]>([]);
+    const [books, setBooks] = useState<BookData[]>([]);
+    const { getBooks, addBook } = BooksAPI();
+
+    useEffect(() => {
+        const fetchBooks = async () => {
+            try {
+                const bookList = await getBooks();
+                if (bookList) {
+                    setBooks(bookList);
+                }
+            } catch (error) {
+                console.error('Error fetching books:', error);
+            }
+        };
+
+        fetchBooks();
+    }, []);
 
     const handleGenreClick = (genre: string) => {
         if (activeGenres.includes(genre)) {
@@ -66,34 +88,21 @@ export const Books = () => {
                         />
                         <SearchBar search='Book' />
                     </section>
-                
                 </section>
             </div>
             <section className='card-list'>
-                <BookCard />
-                <BookCard />
-                <BookCard />
-                <BookCard />
-                <BookCard />
-                <BookCard />
-                <BookCard />
-                <BookCard />
-                <BookCard />
-                <BookCard />
-                <BookCard />
-                <BookCard />
-                <BookCard />
-                <BookCard />
-                <BookCard />
-                <BookCard />
-                <BookCard />
-                <BookCard />
-                <BookCard />
-                <BookCard />
-                <BookCard />
-                <BookCard />
-                <BookCard />
-                <BookCard />
+                {books.length > 0 ? (
+                    
+                    books.map((book) => (
+                        <BookCard
+                            key={book._id}
+                            title={book.title}
+                            author={book.author}
+                        />
+                    ))
+                ) : (
+                    <p>No books available</p>
+                )}
             </section>
         </>
     );
