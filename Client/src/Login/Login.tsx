@@ -15,19 +15,13 @@ export const Login = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         const result = await loginAdmin(formData);
-
+        
         if (result.success) {
-            // Almacena el token en localStorage
-            localStorage.setItem('token', result.token!);
-
-            setShowErrorAlert(false);
-            setError('');
-            navigate('/');
-            console.log('Login successful');
+            navigate('/books');
         } else {
+            // Muestra el mensaje de error
+            setError(result.error);
             setShowErrorAlert(true);
-            setError(result.error || 'Unknown error');
-            console.error(result.error);
         }
     };
 
@@ -38,6 +32,7 @@ export const Login = () => {
             [name]: value,
         }));
     };
+
     return (
         <>
             <h1>Sistema Biblioteca</h1>
@@ -60,6 +55,7 @@ export const Login = () => {
                         name='password'
                         type='password'
                         placeholder='Password'
+                        value={formData.password}
                         onChange={handleChange}
                     />
                 </div>
