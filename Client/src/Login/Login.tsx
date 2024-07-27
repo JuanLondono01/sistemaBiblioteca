@@ -22,7 +22,7 @@ export const Login = () => {
 
             setShowErrorAlert(false);
             setError('');
-            navigate('/');
+            navigate('/books');
             console.log('Login successful');
         } else {
             setShowErrorAlert(true);
