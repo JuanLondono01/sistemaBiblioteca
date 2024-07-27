@@ -1,9 +1,5 @@
 const { Router } = require('express');
 const {getUsers, createUser, getUserById, deleteUserByBId, updateUserById} = require('../controllers/user.controller')
-<<<<<<< HEAD
-=======
-const authmiddleware = require('../middleware/authmiddleware')
->>>>>>> 717c77c111a784f461ae86012d6eb7f643d40e27
 
 const router = Router();
 
