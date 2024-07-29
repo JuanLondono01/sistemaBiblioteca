@@ -38,7 +38,7 @@ export const Books = () => {
         };
 
         fetchBooks();
-    }, []);
+    }, [books]);
 
     const [activeGenres, setActiveGenres] = useState<string[]>([]);
     const handleGenreClick = (genre: string) => {

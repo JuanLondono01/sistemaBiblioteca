@@ -7,12 +7,13 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 
-export default function BasicSelect() {
-    const [genre, setgenre] = React.useState('');
+interface BasicSelectProps {
+    name: string;
+    value: string;
+    onChange: (event: SelectChangeEvent) => void;
+}
 
-    const handleChange = (event: SelectChangeEvent) => {
-        setgenre(event.target.value as string);
-    };
+export const BasicSelect: React.FC<BasicSelectProps> = ({name, onChange, value}) => {
 
     return (
         <Box sx={{ minWidth: 120 }}>
@@ -21,9 +22,10 @@ export default function BasicSelect() {
                 <Select
                     labelId='demo-simple-select-label'
                     id='demo-simple-select'
-                    value={genre}
+                    name={name}
+                    value={value}
                     label='genre'
-                    onChange={handleChange}
+                    onChange={onChange}
                 >
                     <MenuItem value={'Terror'}>Terror</MenuItem>
                     <MenuItem value={'Suspenso'}>Suspenso</MenuItem>
@@ -38,14 +40,25 @@ export default function BasicSelect() {
 
 interface InputInfo {
     label: string;
+    name: string;
+    value: string;
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export const BasicTextFields: React.FC<InputInfo> = ({ label }) => {
+export const BasicTextFields: React.FC<InputInfo> = ({
+    label,
+    name,
+    onChange,
+    value,
+}) => {
     return (
-        <Box component='form' marginBottom={3} noValidate autoComplete='off'>
+        <Box marginBottom={3}>
             <TextField
                 id='outlined-basic'
                 label={label}
+                name={name}
+                value={value}
+                onChange={onChange}
                 variant='outlined'
                 fullWidth
             />
