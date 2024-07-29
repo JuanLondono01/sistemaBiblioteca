@@ -2,10 +2,11 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import React, { useState } from 'react';
-import BasicSelect, { BasicTextFields } from './Input';
+import { BasicSelect, BasicTextFields } from './Input';
 import Stack from '@mui/material/Stack';
 import { BasicButtons } from './Button';
 import { BooksAPI } from '../helpers/BooksAPI';
+import { SelectChangeEvent } from '@mui/material';
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -24,25 +25,71 @@ interface openModal {
     onClose: () => void;
 }
 
-export const BasicModal: React.FC<openModal> = ({ open, onClose }) => {
-    const [BookData, setBookData] = useState<AddBook>();
+interface AddBook {
+    title: string;
+    author: string;
+    editorial: string;
+    publishedDate?: Date;
+    isbn: string;
+    genre: string;
+    availability: boolean;
+}
 
-    interface AddBook {
-        title: string;
-        author: string;
-        editorial: string;
-        publishedDate: Date;
-        isb: string;
-        genre: string;
-        availability: boolean;
-    }
+export const BasicModal: React.FC<openModal> = ({ open, onClose }) => {
+    const [BookData, setBookData] = useState<AddBook>({
+        title: '',
+        author: '',
+        editorial: '',
+        isbn: '',
+        genre: '',
+        availability: true,
+        publishedDate: new Date(),
+    });
 
     const { addBook } = BooksAPI();
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setBookData((prevBookData) => ({
+            ...prevBookData,
+            [name]: value,
+        }));
+    };
+
+    const handleSelectChange = (e: SelectChangeEvent) => {
+        const { name, value } = e.target;
+        setBookData((prevFormData) => ({
+            ...prevFormData,
+            [name]: value as string,
+        }));
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        try {
+            const result = await addBook(BookData);
+            if (result) {
+                alert('Book added successfully');
+                setBookData({
+                    title: '',
+                    author: '',
+                    editorial: '',
+                    isbn: '',
+                    genre: '',
+                    availability: true,
+                })
+                onClose();
+            }
+        } catch (error) {
+            console.error('Error: ', error);
+        }
+    };
 
     return (
         <div>
             <Modal
                 open={open}
+                onClose={onClose}
                 aria-labelledby='modal-modal-title'
                 aria-describedby='modal-modal-description'
             >
@@ -54,24 +101,51 @@ export const BasicModal: React.FC<openModal> = ({ open, onClose }) => {
                     >
                         Add a new Book
                     </Typography>
-                    <form action=''>
-                        <Typography id='modal-modal-description' sx={{ mt: 2 }}>
-                            <BasicTextFields label='Title' />
-                            <BasicTextFields label='Author' />
-                            <BasicTextFields label='Editorial' />
-                            <BasicTextFields label='Isbn' />
-                            <BasicSelect />
-                        </Typography>
+                    <Box component='form' onSubmit={handleSubmit}>
+                        <Box sx={{ mt: 2 }}>
+                            <BasicTextFields
+                                name='title'
+                                value={BookData.title}
+                                onChange={handleChange}
+                                label='Title'
+                            />
+                            <BasicTextFields
+                                name='author'
+                                value={BookData.author}
+                                onChange={handleChange}
+                                label='Author'
+                            />
+                            <BasicTextFields
+                                name='editorial'
+                                value={BookData.editorial}
+                                onChange={handleChange}
+                                label='Editorial'
+                            />
+                            <BasicTextFields
+                                name='isbn'
+                                value={BookData.isbn}
+                                onChange={handleChange}
+                                label='ISBN'
+                            />
+                            <BasicSelect
+                                name='genre'
+                                value={BookData.genre}
+                                onChange={handleSelectChange}
+                            />
+                        </Box>
                         <Stack spacing={2} direction='row' marginTop={3}>
-                            <BasicButtons variant='contained' text='Add book' />
-
+                            <BasicButtons
+                                variant='contained'
+                                text='Add book'
+                                type='submit'
+                            />
                             <BasicButtons
                                 variant='outlined'
                                 text='Cancel'
                                 onClose={onClose}
                             />
                         </Stack>
-                    </form>
+                    </Box>
                 </Box>
             </Modal>
         </div>
