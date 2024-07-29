@@ -28,7 +28,7 @@ export const BooksAPI = () => {
                 const response = await login.post('/api/books', data, {
                     headers: {
                         'Content-Type': 'application/json',
-                        auth: `Bearer ${token}`,
+                        auth: `${token}`,
                     },
                 });
                 return response.data;
