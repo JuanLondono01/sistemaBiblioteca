@@ -87,7 +87,17 @@ export const Books = () => {
                             className='add-book'
                             onClick={handleOpenModal}
                         />
-                        <SearchBar search='Book' />
+                        <SearchBar search='Book' list='book-list'/>
+
+                        <datalist id='book-list'>
+                            {
+                                books.map((book)=>{
+                                    return(
+                                        <option>{book.title}</option>
+                                    )
+                                })
+                            }
+                        </datalist>
                     </section>
                 </section>
             </div>
