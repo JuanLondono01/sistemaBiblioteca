@@ -7,7 +7,6 @@ import { BooksAPI } from './helpers/BooksAPI';
 import { BookCard } from './components/BookCard';
 import { IoAddCircleOutline } from 'react-icons/io5';
 import { BasicModal } from './components/Modal';
-
 export const Books = () => {
 
 
@@ -15,13 +14,15 @@ export const Books = () => {
         title: string;
         author: string;
         _id: string;
+        genre: string; // Asegúrate de que cada libro tenga un campo 'genre'
     }
+
     const [books, setBooks] = useState<BookData[]>([]);
-
     const [open, setOpen] = useState(false);
+    const [activeGenres, setActiveGenres] = useState<string[]>([]);
 
-    const handleOpenModal = () => setOpen(true)
-    const handleCloseModal = () => setOpen(false)
+    const handleOpenModal = () => setOpen(true);
+    const handleCloseModal = () => setOpen(false);
 
     const { getBooks } = BooksAPI();
 
@@ -38,9 +39,8 @@ export const Books = () => {
         };
 
         fetchBooks();
-    }, [books]);
+    }, []);
 
-    const [activeGenres, setActiveGenres] = useState<string[]>([]);
     const handleGenreClick = (genre: string) => {
         if (activeGenres.includes(genre)) {
             setActiveGenres(activeGenres.filter((g) => g !== genre));
@@ -50,6 +50,11 @@ export const Books = () => {
     };
 
     const isGenreActive = (genre: string) => activeGenres.includes(genre);
+
+    // Filtra los libros por los géneros activos
+    const filteredBooks = books.filter(
+        (book) => activeGenres.length === 0 || activeGenres.includes(book.genre)
+    );
 
     return (
         <>
@@ -64,46 +69,41 @@ export const Books = () => {
             <h2>Books</h2>
             <div className='action-bar'>
                 <section className='filters'>
-                    <Genres
-                        text='Terror'
-                        isActive={isGenreActive('Terror')}
-                        onClick={() => handleGenreClick('Terror')}
-                    />
-                    <Genres
-                        text='Suspenso'
-                        isActive={isGenreActive('Suspenso')}
-                        onClick={() => handleGenreClick('Suspenso')}
-                    />
-                    <Genres
-                        text='Accion'
-                        isActive={isGenreActive('Accion')}
-                        onClick={() => handleGenreClick('Accion')}
-                    />
-                    <Genres
-                        text='Historia'
-                        isActive={isGenreActive('Historia')}
-                        onClick={() => handleGenreClick('Historia')}
-                    />
-                    <Genres
-                        text='Drama'
-                        isActive={isGenreActive('Drama')}
-                        onClick={() => handleGenreClick('Drama')}
-                    />
+                    {['Terror', 'Suspenso', 'Accion', 'Historia', 'Drama'].map(
+                        (genre) => (
+                            <Genres
+                                key={genre}
+                                text={genre}
+                                name={genre}
+                                isActive={isGenreActive(genre)}
+                                onClick={() => handleGenreClick(genre)}
+                            />
+                        )
+                    )}
                     <section className='search-sect'>
                         <IoAddCircleOutline
                             size={30}
                             color='gray'
                             className='add-book'
                             onClick={handleOpenModal}
-                            
                         />
-                        <SearchBar search='Book' />
+                        <SearchBar search='Book' list='book-list'/>
+
+                        <datalist id='book-list'>
+                            {
+                                books.map((book)=>{
+                                    return(
+                                        <option>{book.title}</option>
+                                    )
+                                })
+                            }
+                        </datalist>
                     </section>
                 </section>
             </div>
             <section className='card-list'>
-                {books.length > 0 ? (
-                    books.map((book) => (
+                {filteredBooks.length > 0 ? (
+                    filteredBooks.map((book) => (
                         <BookCard
                             key={book._id}
                             title={book.title}
@@ -115,7 +115,7 @@ export const Books = () => {
                 )}
             </section>
 
-            <BasicModal open={open} onClose={handleCloseModal}/>
+            <BasicModal open={open} onClose={handleCloseModal} />
         </>
     );
 };
