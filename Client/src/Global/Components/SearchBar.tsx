@@ -1,47 +1,47 @@
-import { useState } from 'react';
 import '../styles/search.css';
 import { IoIosSearch } from 'react-icons/io';
 import { IoIosClose } from 'react-icons/io';
 interface searchProps {
     search: string;
-    list?: string
+    list?: string;
+    value: string;
+    inSearch?: boolean;
+    deleteText?: () => void;
+    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export const SearchBar: React.FC<searchProps> = ({ search, list }) => {
-    const [InSearch, setInSearch] = useState(false);
-    const [Search, setSearch] = useState('');
-
-    const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
-        setSearch(value);
-        setInSearch(value !== '');
-    };
-
-    const deleteSearchText = () => {
-        setSearch('');
-        setInSearch(false);
-    };
-
+export const SearchBar: React.FC<searchProps> = ({
+    search,
+    list,
+    onChange,
+    value,
+    deleteText,
+    inSearch,
+}) => {
     return (
         <>
             <div className='search-container'>
                 <input
                     type='text'
                     placeholder={`Search ${search}`}
-                    onChange={onInputChange}
-                    value={Search}
+                    onChange={onChange}
+                    value={value}
                     className='search-bar'
                     list={list}
                 />
-                {InSearch ? (
+                {inSearch ? (
                     <IoIosClose
                         className='close-icon'
                         size={20}
-                        onClick={deleteSearchText}
-						color='gray'
+                        onClick={deleteText}
+                        color='gray'
                     />
                 ) : (
-                    <IoIosSearch className='search-icon' size={20} color='gray' />
+                    <IoIosSearch
+                        className='search-icon'
+                        size={20}
+                        color='gray'
+                    />
                 )}
             </div>
         </>

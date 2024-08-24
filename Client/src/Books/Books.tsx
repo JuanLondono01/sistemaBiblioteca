@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Genres } from '../Books/components/Genres';
 import { SideBar } from '../Global/Components/SideBar';
 import { SearchBar } from '../Global/Components/SearchBar';
@@ -7,22 +7,35 @@ import { BooksAPI } from './helpers/BooksAPI';
 import { BookCard } from './components/BookCard';
 import { IoAddCircleOutline } from 'react-icons/io5';
 import { BasicModal } from './components/Modal';
+
+interface BookData {
+    title: string;
+    author: string;
+    _id: string;
+    genre: string;
+}
+
 export const Books = () => {
+    const [InSearch, setInSearch] = useState(false);
 
-
-    interface BookData {
-        title: string;
-        author: string;
-        _id: string;
-        genre: string; // Asegúrate de que cada libro tenga un campo 'genre'
-    }
-
+    const [SearchedBook, SetSearchedBook] = useState('');
     const [books, setBooks] = useState<BookData[]>([]);
     const [open, setOpen] = useState(false);
     const [activeGenres, setActiveGenres] = useState<string[]>([]);
 
     const handleOpenModal = () => setOpen(true);
     const handleCloseModal = () => setOpen(false);
+
+    const changeSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        SetSearchedBook(value);
+        setInSearch(value !== '');
+    };
+
+    const deleteSearchText = () => {
+        SetSearchedBook('');
+        setInSearch(false);
+    };
 
     const { getBooks } = BooksAPI();
 
@@ -51,10 +64,15 @@ export const Books = () => {
 
     const isGenreActive = (genre: string) => activeGenres.includes(genre);
 
-    // Filtra los libros por los géneros activos
-    const filteredBooks = books.filter(
-        (book) => activeGenres.length === 0 || activeGenres.includes(book.genre)
-    );
+    // Filtra los libros por los géneros activos o por busqueda
+    const filteredBooks = books.filter((book) => {
+        const matchesGenre =
+            activeGenres.length === 0 || activeGenres.includes(book.genre);
+        const matchesSearch =
+            SearchedBook === '' ||
+            book.title.toLowerCase().includes(SearchedBook.toLowerCase());
+        return matchesGenre && matchesSearch;
+    });
 
     return (
         <>
@@ -87,16 +105,19 @@ export const Books = () => {
                             className='add-book'
                             onClick={handleOpenModal}
                         />
-                        <SearchBar search='Book' list='book-list'/>
+                        <SearchBar
+                            search='Book'
+                            list='book-list'
+                            onChange={changeSearch}
+                            value={SearchedBook}
+                            inSearch={InSearch}
+                            deleteText={deleteSearchText}
+                        />
 
                         <datalist id='book-list'>
-                            {
-                                books.map((book)=>{
-                                    return(
-                                        <option>{book.title}</option>
-                                    )
-                                })
-                            }
+                            {books.map((book) => (
+                                <option key={book.title} value={book.title} />
+                            ))}
                         </datalist>
                     </section>
                 </section>
