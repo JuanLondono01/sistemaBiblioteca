@@ -1,21 +1,43 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Genres } from '../Books/components/Genres';
 import { SideBar } from '../Global/Components/SideBar';
 import { SearchBar } from '../Global/Components/SearchBar';
-import { IoIosAddCircleOutline } from 'react-icons/io';
 import './styles/books.css';
 import { BooksAPI } from './helpers/BooksAPI';
 import { BookCard } from './components/BookCard';
+import { IoAddCircleOutline } from 'react-icons/io5';
+import { BasicModal } from './components/Modal';
+
+interface BookData {
+    title: string;
+    author: string;
+    _id: string;
+    genre: string;
+}
 
 export const Books = () => {
-    interface BookData {
-        title: string;
-        author: string;
-        _id: string;
-    }
-    const [activeGenres, setActiveGenres] = useState<string[]>([]);
+    const [InSearch, setInSearch] = useState(false);
+
+    const [SearchedBook, SetSearchedBook] = useState('');
     const [books, setBooks] = useState<BookData[]>([]);
-    const { getBooks, addBook } = BooksAPI();
+    const [open, setOpen] = useState(false);
+    const [activeGenres, setActiveGenres] = useState<string[]>([]);
+
+    const handleOpenModal = () => setOpen(true);
+    const handleCloseModal = () => setOpen(false);
+
+    const changeSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        SetSearchedBook(value);
+        setInSearch(value !== '');
+    };
+
+    const deleteSearchText = () => {
+        SetSearchedBook('');
+        setInSearch(false);
+    };
+
+    const { getBooks } = BooksAPI();
 
     useEffect(() => {
         const fetchBooks = async () => {
@@ -42,6 +64,16 @@ export const Books = () => {
 
     const isGenreActive = (genre: string) => activeGenres.includes(genre);
 
+    // Filtra los libros por los géneros activos o por busqueda
+    const filteredBooks = books.filter((book) => {
+        const matchesGenre =
+            activeGenres.length === 0 || activeGenres.includes(book.genre);
+        const matchesSearch =
+            SearchedBook === '' ||
+            book.title.toLowerCase().includes(SearchedBook.toLowerCase());
+        return matchesGenre && matchesSearch;
+    });
+
     return (
         <>
             <SideBar
@@ -55,45 +87,44 @@ export const Books = () => {
             <h2>Books</h2>
             <div className='action-bar'>
                 <section className='filters'>
-                    <Genres
-                        text='Terror'
-                        isActive={isGenreActive('Terror')}
-                        onClick={() => handleGenreClick('Terror')}
-                    />
-                    <Genres
-                        text='Suspenso'
-                        isActive={isGenreActive('Suspenso')}
-                        onClick={() => handleGenreClick('Suspenso')}
-                    />
-                    <Genres
-                        text='Accion'
-                        isActive={isGenreActive('Accion')}
-                        onClick={() => handleGenreClick('Accion')}
-                    />
-                    <Genres
-                        text='Historia'
-                        isActive={isGenreActive('Historia')}
-                        onClick={() => handleGenreClick('Historia')}
-                    />
-                    <Genres
-                        text='Drama'
-                        isActive={isGenreActive('Drama')}
-                        onClick={() => handleGenreClick('Drama')}
-                    />
+                    {['Terror', 'Suspenso', 'Accion', 'Historia', 'Drama'].map(
+                        (genre) => (
+                            <Genres
+                                key={genre}
+                                text={genre}
+                                name={genre}
+                                isActive={isGenreActive(genre)}
+                                onClick={() => handleGenreClick(genre)}
+                            />
+                        )
+                    )}
                     <section className='search-sect'>
-                        <IoIosAddCircleOutline
+                        <IoAddCircleOutline
                             size={30}
                             color='gray'
                             className='add-book'
+                            onClick={handleOpenModal}
                         />
-                        <SearchBar search='Book' />
+                        <SearchBar
+                            search='Book'
+                            list='book-list'
+                            onChange={changeSearch}
+                            value={SearchedBook}
+                            inSearch={InSearch}
+                            deleteText={deleteSearchText}
+                        />
+
+                        <datalist id='book-list'>
+                            {books.map((book) => (
+                                <option key={book.title} value={book.title} />
+                            ))}
+                        </datalist>
                     </section>
                 </section>
             </div>
             <section className='card-list'>
-                {books.length > 0 ? (
-                    
-                    books.map((book) => (
+                {filteredBooks.length > 0 ? (
+                    filteredBooks.map((book) => (
                         <BookCard
                             key={book._id}
                             title={book.title}
@@ -104,6 +135,8 @@ export const Books = () => {
                     <p>No books available</p>
                 )}
             </section>
+
+            <BasicModal open={open} onClose={handleCloseModal} />
         </>
     );
 };
