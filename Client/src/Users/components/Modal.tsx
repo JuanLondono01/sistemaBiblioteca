@@ -1,8 +1,8 @@
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import React, { useState } from 'react';
-import {  BasicTextFields } from './Input';
+import React, { useState, useEffect } from 'react';
+import { BasicTextFields } from './Input';
 import Stack from '@mui/material/Stack';
 import { BasicButtons } from './Button';
 import { UsersAPI } from '../helpers/UsersAPI';
@@ -19,32 +19,54 @@ const style = {
     p: 4,
 };
 
-interface openModal {
+interface OpenModalProps {
     open: boolean;
     onClose: () => void;
+    user?: {
+        _id: string;
+        address: string;
+        age: number;
+        email: string;
+        name: string;
+        lastname: string;
+        phoneNumber: number;
+    } | null;
 }
 
-interface AddUser {
-    name: string;
-    lastname: string;
-    age: number;
-    phoneNumber: number;
-    email: string;
-    address: string;
-}
-
-export const BasicModal: React.FC<openModal> = ({ open, onClose }) => {
-    const [UserData, setUserData] = useState<AddUser>({
+export const BasicModal: React.FC<OpenModalProps> = ({ open, onClose, user }) => {
+    const [userData, setUserData] = useState({
         name: '',
         lastname: '',
         age: 0,
         phoneNumber: 0,
         email: '',
-        address: ''
-
+        address: '',
     });
 
-    const { addUser } = UsersAPI();
+    const { addUser, editUser } = UsersAPI(); // Asegúrate de que editUser esté definido en UsersAPI
+
+    useEffect(() => {
+        if (user) {
+            setUserData({
+                name: user.name,
+                lastname: user.lastname,
+                age: user.age,
+                phoneNumber: user.phoneNumber,
+                email: user.email,
+                address: user.address,
+            });
+        } else {
+            // Limpiar los datos del usuario si no hay un usuario
+            setUserData({
+                name: '',
+                lastname: '',
+                age: 0,
+                phoneNumber: 0,
+                email: '',
+                address: '',
+            });
+        }
+    }, [user]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -54,101 +76,91 @@ export const BasicModal: React.FC<openModal> = ({ open, onClose }) => {
         }));
     };
 
-
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const result = await addUser(UserData);
-            if (result) {
-                alert('User added successfully');
-                setUserData({
-                    name: '',
-                    lastname: '',
-                    age: 0,
-                    phoneNumber: 0,
-                    email: '',
-                    address: ''
-                })
-                onClose();
+            if (user?._id) {
+                await editUser(user._id, userData); // Asumiendo que editUser requiere id y los datos
+            } else {
+                await addUser(userData);
             }
+            alert('User saved successfully');
+            onClose(); // Cierra el modal
         } catch (error) {
             console.error('Error: ', error);
         }
     };
 
     return (
-        <div>
-            <Modal
-                open={open}
-                onClose={onClose}
-                aria-labelledby='modal-modal-title'
-                aria-describedby='modal-modal-description'
-            >
-                <Box sx={style}>
-                    <Typography
-                        id='modal-modal-title'
-                        variant='h6'
-                        component='h2'
-                    >
-                        Add a new User
-                    </Typography>
-                    <Box component='form' onSubmit={handleSubmit}>
-                        <Box sx={{ mt: 2 }}>
-                            <BasicTextFields
-                                name='name'
-                                value={UserData.name}
-                                onChange={handleChange}
-                                label='Name'
-                            />
-                            <BasicTextFields
-                                name='lastname'
-                                value={UserData.lastname}
-                                onChange={handleChange}
-                                label='Lastname'
-                            />
-                            <BasicTextFields
-                                name='age'
-                                value={UserData.age.toString()}
-                                type='number'
-                                onChange={handleChange}
-                                label='Age'
-                            />
-                            <BasicTextFields
-                                name='phoneNumber'
-                                value={UserData.phoneNumber.toString()}
-                                type='number'
-                                onChange={handleChange}
-                                label='Phone Number'
-                            />
-                            <BasicTextFields
-                                name='email'
-                                value={UserData.email}
-                                onChange={handleChange}
-                                label='Email'
-                            />
-                            <BasicTextFields
-                                name='address'
-                                value={UserData.address}
-                                onChange={handleChange}
-                                label='Address'
-                            />
-                        </Box>
-                        <Stack spacing={2} direction='row' marginTop={3}>
-                            <BasicButtons
-                                variant='contained'
-                                text='Add User'
-                                type='submit'
-                            />
-                            <BasicButtons
-                                variant='outlined'
-                                text='Cancel'
-                                onClose={onClose}
-                            />
-                        </Stack>
+        <Modal
+            open={open}
+            onClose={onClose} // Cierra el modal al hacer clic fuera de él
+            aria-labelledby='modal-modal-title'
+            aria-describedby='modal-modal-description'
+        >
+            <Box sx={style}>
+                <Typography
+                    id='modal-modal-title'
+                    variant='h6'
+                    component='h2'
+                >
+                    {user?._id ? 'Edit User' : 'Add a new User'}
+                </Typography>
+                <Box component='form' onSubmit={handleSubmit}>
+                    <Box sx={{ mt: 2 }}>
+                        <BasicTextFields
+                            name='name'
+                            value={userData.name}
+                            onChange={handleChange}
+                            label='Name'
+                        />
+                        <BasicTextFields
+                            name='lastname'
+                            value={userData.lastname}
+                            onChange={handleChange}
+                            label='Lastname'
+                        />
+                        <BasicTextFields
+                            name='age'
+                            value={userData.age.toString()}
+                            type='number'
+                            onChange={handleChange}
+                            label='Age'
+                        />
+                        <BasicTextFields
+                            name='phoneNumber'
+                            value={userData.phoneNumber.toString()}
+                            type='number'
+                            onChange={handleChange}
+                            label='Phone Number'
+                        />
+                        <BasicTextFields
+                            name='email'
+                            value={userData.email}
+                            onChange={handleChange}
+                            label='Email'
+                        />
+                        <BasicTextFields
+                            name='address'
+                            value={userData.address}
+                            onChange={handleChange}
+                            label='Address'
+                        />
                     </Box>
+                    <Stack spacing={2} direction='row' marginTop={3}>
+                        <BasicButtons
+                            variant='contained'
+                            text='Save'
+                            type='submit'
+                        />
+                        <BasicButtons
+                            variant='outlined'
+                            text='Cancel'
+                            onClick={onClose} // Cierra el modal
+                        />
+                    </Stack>
                 </Box>
-            </Modal>
-        </div>
+            </Box>
+        </Modal>
     );
 };
