@@ -127,8 +127,8 @@ export const Books = () => {
                     filteredBooks.map((book) => (
                         <BookCard
                             key={book._id}
-                            title={book.title}
-                            author={book.author}
+                            title={book.title.toUpperCase()}
+                            author={book.author.toUpperCase()}
                         />
                     ))
                 ) : (
