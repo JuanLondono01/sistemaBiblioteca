@@ -4,7 +4,7 @@ import { IoIosClose } from 'react-icons/io';
 interface searchProps {
     search: string;
     list?: string;
-    value: string;
+    value?: string;
     inSearch?: boolean;
     deleteText?: () => void;
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
