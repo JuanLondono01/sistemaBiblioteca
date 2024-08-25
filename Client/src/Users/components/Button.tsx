@@ -1,20 +1,17 @@
-import Button, { ButtonProps } from '@mui/material/Button';
+// Button.tsx
+import Button from '@mui/material/Button';
+import React from 'react';
 
-interface ButtonVariant {
-    variant: ButtonProps['variant'];
-    onClose?: () => void;
+interface BasicButtonsProps {
+    variant: 'contained' | 'outlined';
     text: string;
-    type?: 'button' | 'submit' | 'reset';
+    onClick?: () => void; // Asegúrate de incluir onClick
+    type?: 'button' | 'submit' | 'reset'; // Opcional, dependiendo del uso
 }
 
-export const BasicButtons: React.FC<ButtonVariant> = ({
-    variant,
-    text,
-    onClose,
-    type
-}) => {
+export const BasicButtons: React.FC<BasicButtonsProps> = ({ variant, text, onClick, type }) => {
     return (
-        <Button variant={variant} onClick={onClose} type={type}>
+        <Button variant={variant} onClick={onClick} type={type}>
             {text}
         </Button>
     );
