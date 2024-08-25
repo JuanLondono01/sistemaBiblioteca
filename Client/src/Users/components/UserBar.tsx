@@ -9,9 +9,11 @@ interface userData {
     email: string;
     phone: string;
     address: string;
+    onDelete: ()=> void;
+    onEdit: ()=> void;
 }
 
-export const UserBar: React.FC<userData> = ({ name, email, phone, address }) => {
+export const UserBar: React.FC<userData> = ({ name, email, phone, address, onDelete, onEdit }) => {
     return (
         <>
             <div className='user-container'>
@@ -22,8 +24,8 @@ export const UserBar: React.FC<userData> = ({ name, email, phone, address }) => 
                     <p>{address}</p>
                 </section>
                 <section className='user-opts'>
-                <CiEdit size={25} color='blue' className='opt'/>
-                <CiTrash size={25} color='red' className='opt'/>
+                <CiEdit size={25} color='blue' className='opt' onClick={onEdit}/>
+                <CiTrash size={25} color='red' className='opt'  onClick={onDelete}/>
                 </section>
             </div>
         </>
