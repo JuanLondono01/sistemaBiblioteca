@@ -19,6 +19,8 @@ export const Users = () => {
     };
 
     const [open, setOpen] = useState(false);
+    const [searchedUser, setsearchedUser] = useState('');
+    const [InSearch, setInSearch] = useState(false);
     const [UserData, setUserData] = useState<User[]>([]);
     const [userToEdit, setUserToEdit] = useState<User | null>(null);
     const { getUsers, deleteUser } = UsersAPI();
@@ -47,7 +49,9 @@ export const Users = () => {
     const handleDeleteUser = async (id: string) => {
         try {
             await deleteUser(id);
-            setUserData((prevUsers) => prevUsers.filter((user) => user._id !== id));
+            setUserData((prevUsers) =>
+                prevUsers.filter((user) => user._id !== id)
+            );
         } catch (error) {
             console.error('Error deleting user:', error);
         }
@@ -56,6 +60,24 @@ export const Users = () => {
     useEffect(() => {
         fetchUsers();
     }, []);
+
+    const changeSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setsearchedUser(value);
+        setInSearch(value !== '');
+    };
+
+    const deleteSearchText = () => {
+        setsearchedUser('');
+        setInSearch(false);
+    };
+
+    const filteredUsers = UserData.filter((user) => {
+        const matchesSearch =
+            searchedUser === '' ||
+            user.name.toLowerCase().includes(searchedUser.toLowerCase());
+        return matchesSearch;
+    });
 
     return (
         <>
@@ -76,38 +98,42 @@ export const Users = () => {
                     className='add-book'
                     onClick={() => handleOpenModal()}
                 />
-                <SearchBar search='User' list='users'/>
+                <SearchBar
+                    search='User'
+                    list='users'
+                    onChange={changeSearch}
+                    value={searchedUser}
+                    inSearch={InSearch}
+                    deleteText={deleteSearchText}
+                />
             </section>
             <datalist id='users'>
-                {
-                    UserData.map((user)=>{
-                        return(
-                            <option>{user.name}</option>
-                        )
-                    })
-                }
+                {UserData.map((user) => {
+                    return <option>{user.name}</option>;
+                })}
             </datalist>
 
             <section className='users-list'>
-                {
-                    UserData.length > 0 ? (
-                        UserData.map((user) => (
-                            <UserBar
-                                key={user._id}
-                                address={user.address.toUpperCase()}
-                                email={user.email.toUpperCase()}
-                                name={user.name.toUpperCase()}
-                                phone={user.phoneNumber.toString()} // Convertir número a cadena
-                                onDelete={() => handleDeleteUser(user._id)}
-                                onEdit={() => handleOpenModal(user)}
-                            />
-                        ))
-                    ) :
-                    (
-                        <p>No users found</p>
-                    )
-                }
-                <BasicModal open={open} onClose={handleCloseModal} user={userToEdit} />
+                {filteredUsers.length > 0 ? (
+                    filteredUsers.map((user) => (
+                        <UserBar
+                            key={user._id}
+                            address={user.address.toUpperCase()}
+                            email={user.email.toUpperCase()}
+                            name={user.name.toUpperCase()}
+                            phone={user.phoneNumber.toString()} // Convertir número a cadena
+                            onDelete={() => handleDeleteUser(user._id)}
+                            onEdit={() => handleOpenModal(user)}
+                        />
+                    ))
+                ) : (
+                    <p>No users found</p>
+                )}
+                <BasicModal
+                    open={open}
+                    onClose={handleCloseModal}
+                    user={userToEdit}
+                />
             </section>
         </>
     );
