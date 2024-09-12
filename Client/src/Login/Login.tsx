@@ -19,7 +19,7 @@ export const Login = () => {
         if (result.success) {
 
             // Almacena el token en localStorage
-            localStorage.setItem('token', result.token!);
+            localStorage.setItem('token', result.token);
 
             setShowErrorAlert(false);
             setError('');
