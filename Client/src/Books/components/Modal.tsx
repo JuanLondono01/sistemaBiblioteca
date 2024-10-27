@@ -7,6 +7,19 @@ import Stack from '@mui/material/Stack';
 import { BasicButtons } from './Button';
 import { BooksAPI } from '../helpers/BooksAPI';
 import { SelectChangeEvent } from '@mui/material';
+import Swal from 'sweetalert2'
+
+const addBookAlert = () =>{
+    Swal.fire({
+        icon: 'success',
+        title: 'Book Added Succesfully',
+        showConfirmButton: false,
+        timer: 1500,
+        showClass:{
+            popup: `animate__animated`
+        }
+    })
+}
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -69,7 +82,7 @@ export const BasicModal: React.FC<openModal> = ({ open, onClose }) => {
         try {
             const result = await addBook(BookData);
             if (result) {
-                alert('Book added successfully');
+                addBookAlert()
                 setBookData({
                     title: '',
                     author: '',
